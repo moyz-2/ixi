@@ -3,7 +3,7 @@ name: Safe IXI Miner
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */60 * * *'
+    - cron: '0 * * * *'
 
 jobs:
   safe-mine:
